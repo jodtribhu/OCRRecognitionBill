@@ -38,4 +38,10 @@ CREATE TABLE `shops` (
   PRIMARY KEY (`shopid`,`shopname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-https://user-images.githubusercontent.com/51241236/103434581-8d203380-4c29-11eb-960b-8d2da7d91239.png
+#Sample Images:
+
+<img src="https://user-images.githubusercontent.com/51241236/103434581-8d203380-4c29-11eb-960b-8d2da7d91239.png" >
+<img src="https://user-images.githubusercontent.com/51241236/103434592-ae811f80-4c29-11eb-8af0-acda699ac18c.png" >
+<img src="https://user-images.githubusercontent.com/51241236/103434596-b9d44b00-4c29-11eb-8e95-fa4a0ac38036.png" >
+<img src="https://user-images.githubusercontent.com/51241236/103434600-c2c51c80-4c29-11eb-8150-a4000fdf811f.png" >
+

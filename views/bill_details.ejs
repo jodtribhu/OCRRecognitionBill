@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Bill Details</title>
+      <link rel="stylesheet" href="/css/styles.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  </head>
+  <body class="transparentbackground">
+    <h2 class="h1billdetails">Bill Details</h2>
+    <div class="card card_mine">
+      <div class="card-body">
+        <p class="textbold">Bill No:  <span class="textnormal"><%= bill_no  %> </span> </p>
+        <p class="textbold">Customer name : <span class="textnormal"><%= c_name %></span></p>
+        <p class="textbold">Bill Date : <span class="textnormal"><%= b_date %></span></p>
+        <p class="textbold">Shop Name : <span class="textnormal"><%= s_name %></span></p>
+        <p class="textbold">Bill Amount : <span class="textnormal"><%= b_amt %></span></p>
+        <p class="textbold">Bill Rating : <span class="textnormal"><%= b_rate %></span></p>
+        <p  class="textbold">Bill Image :  <span id="bimagelink" class="textnormal"><%= b_imgt  %></span> </p>
+        <img id="bimage" src="" alt="Hi" width="500" height="600">
+
+      </div>
+    </div>
+    <script>
+    $(document).ready(function()
+    {
+      var link=$("#bimagelink").text();
+      console.log(link);
+      var filename = link.replace(/^.*[\\\/]/, '')
+      var rlink="/uploads/"+filename;
+      $("#bimage").attr("src",rlink);
+    });
+
+    </script>
+  </body>
+</html>

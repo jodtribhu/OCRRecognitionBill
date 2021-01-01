@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Bill</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Titillium+Web:wght@700&display=swap" rel="stylesheet">
+  <script>
+
+  var filelocations = [];
+    $(document).ready(function() {
+      function hasDuplicates(arr)
+          {
+        return new Set(arr).size !== arr.length;
+            }
+
+
+
+      $("#addnewrow").click(function() {
+        console.log($('#fileUpload').value);
+        console.log($('#adding').text());
+
+
+          var newRow = document.getElementById('myTable').insertRow();
+          newRow.id = "tablerow";
+          newRow.innerHTML = " <td><input class='form-control isize' type='text' name='customername[]' placeholder='Name' autofocus required></td>" +
+          " <td> <input id='billno"+newRow.rowIndex+"' onkeyup='billnoverify()' class='form-control isize identbill' type='text' name='customerbillno[]' placeholder='Customer Bill No' autofocus required> </td> " +
+          "  <td><input id='billdate"+newRow.rowIndex+"' class='form-control isize identdate'  onchange='datechange()' type='date' name='billdate[]' placeholder='Bill Date' autofocus required></td>" +
+          "  <td> <select id='shopname"+newRow.rowIndex+"' class='form-control isize ident' onchange='shopchange()' name='shopname[]'>"+
+        "<% shops.forEach(function(shopn){ %>"+
+                     "<option value=<%=shopn.shopname %> > <%= shopn.shopname %> </option>"+
+        "  <%  }) %>"+
+        "  </select></td>" +
+          "  <td><input class='form-control isize' type='number' name='billamount[]' placeholder='Bill Amount' class='form-control' required></td>" +
+          "  <td> <input id='fileUpload"+newRow.rowIndex+"' class='form-control isize inde' onchange='check()' type='file'  name='billpics' placeholder='Image Of The Bill'  required></td>";
+
+
+      });
+
+
+      function validateForm()
+      {
+
+        var vbill=true;
+        var vdate=true;
+        var vimage=true;
+        var vcombined=true;
+        var vform=true;
+
+        $(".identbill").each(function() {
+          if( $(this).css("border-color") === "rgb(255, 0, 0)")
+          {
+              window.alert("Invalid Bill No");
+              vbill= false;
+
+          }
+        });
+        $(".identdate").each(function() {
+          if( $(this).css("border-color") === "rgb(255, 0, 0)")
+          {
+              window.alert("Invalid Bill Date");
+              vdate= false;
+
+          }
+        });
+        $(".inde").each(function() {
+          if( $(this).css("border-color") === "rgb(255, 0, 0)")
+          {
+              window.alert("Invalid Upload!! Please upload in proper image format");
+              vimage= false;
+
+          }
+        });
+
+        var tcustomerbillno = document.getElementsByName('customerbillno[]');
+        var tshopname = document.getElementsByName('shopname[]');
+        var tcustomerbillnos = [];
+        var tshopnames = [];
+        var tcombined=[];
+        for (var m = 0; m < tcustomerbillno.length; m++) {
+          /* Getting element */
+          var bf = tcustomerbillno[m];
+          var df = tshopname[m];
+          var combb=bf.value;
+          var combd=df.value;
+          var combine=combb.concat(combd);
+          tcombined.push(combine);
+        }
+          console.log("comp"+tcombined);
+          var k=0;
+          for(k=0;k<tcombined.length;k++)
+            {
+              console.log("combining"+tcombined[k]);
+              var comb=tcombined[k];
+              tcombined[k]=" ";
+              var no=k+1;
+              if(tcombined.includes(comb.toString()))
+              {
+                  document.getElementById('billno'+no).style.borderColor = "red";
+                  window.alert("You have uploaded two same bills");
+                  vcombined= false;
+              }
+            }
+
+        var ele=document.getElementById("billform");
+        var chk=ele.checkValidity();
+        ele.reportValidity();
+        if(chk==false)
+        {
+          vform= false;
+        }
+
+
+
+        if(vbill && vdate && vimage && vcombined && vform)
+        {
+          return true;
+
+        }
+        else
+        {
+          console.log(vbill  );
+          console.log(vdate  );
+          console.log(vimage  );
+          console.log(vcombined  );
+          console.log(vform  );
+
+          return false;
+
+        }
+
+
+      }
+
+
+
+      $("#applycoupon").click(function(e) {
+        e.preventDefault();
+          if(validateForm())
+          {
+            /* Getting input */
+            var customername = document.getElementsByName('customername[]');
+            var customerbillno = document.getElementsByName('customerbillno[]');
+            var billdate = document.getElementsByName('billdate[]');
+            var shopname = document.getElementsByName('shopname[]');
+            var billamount = document.getElementsByName('billamount[]');
+            /* Getting array */
+            var customers = [];
+            var customerbillnos = [];
+            var billdates = [];
+            var shopnames = [];
+            var billamounts = [];
+
+            var combined=[];
+
+            var fileStore = [];
+            for (var i = 0; i < customername.length; i++) {
+              /* Getting element */
+              var a = customername[i];
+              var b = customerbillno[i];
+              var c = billdate[i];
+              var d = shopname[i];
+              var e = billamount[i];
+              customers.push(a.value);
+              customerbillnos.push(b.value);
+              billdates.push(c.value);
+              shopnames.push(d.value);
+              billamounts.push(e.value);
+
+              // billpics.push.apply(f.value);
+            }
+
+            console.log(validateForm());
+            console.log(customers);
+            let customerbillnames = JSON.stringify({
+              tcustomerbillnames: customers
+            });
+            let customerbillnumbers = JSON.stringify({
+              tcustomerbillnumbers: customerbillnos
+            });
+            let customerbilldates = JSON.stringify({
+              tcustomerbilldates: billdates
+            });
+            let customershopnames = JSON.stringify({
+              tcustomershopnames: shopnames
+            });
+            let customerbillamounts = JSON.stringify({
+              tcustomerbillamounts: billamounts
+            });
+            let customerbillpics = JSON.stringify({
+              tcustomerbillpics: filelocations
+            });
+            console.log(customerbillpics);
+
+            $.post("/inserttest", {
+              customerbillnames: customerbillnames,
+              customerbillnumbers: customerbillnumbers,
+              customerbilldates: customerbilldates,
+              customershopnames: customershopnames,
+              customerbillamounts: customerbillamounts,
+              customerbillpics: customerbillpics
+            }, function(data, status) {
+              console.log("inside");
+              var result = data.localeCompare("thankyou");
+              if(result===0)
+              {
+                window.location.replace("/thankyou");
+              }
+            });
+          }
+      });
+    });
+
+    function check() {
+       var id = event.target.id;
+
+      console.log(event);
+      var data = new FormData();
+      var file = event.target.files[0]
+      data.set('billpics', file, "filename.jpg");
+
+      // var rowi = $(this).parent().parent().index();
+      console.log(id);
+      var ind=id.split("fileUpload");
+      var inde=ind[1];
+      console.log(inde);
+
+      var url = 'upload';
+      var opts = {
+        method: 'POST',
+        body: data
+      };
+
+      fetch(url, opts)
+        .then(res => res.text())
+        .then(data => {
+
+          if(data.includes("Error") || data.includes("error"))
+          {
+              document.getElementById(id).style.borderColor = "red";
+          }
+          else
+          {
+            document.getElementById(id).style.borderColor = "green";
+            var dest = data.split("niotanitsed");
+            var dloc = dest[1];
+           console.log(dloc);
+           $("#"+id).replaceWith("<td class='successclass'>Uploaded  &#10004;</td>");
+           window.filelocations.push({
+           index : inde,
+           location: dloc
+           })
+            alert("Successfully Uploaded")
+          }
+
+
+        })
+        .catch(err => {
+          alert(err);
+        })
+    }
+
+    function billnoverify() {
+        var id = event.target.id;
+        console.log("inside");
+        console.log("In the "+id);
+        var ind=id.split("billno");
+        var inde=ind[1];
+        var shopname = $("#shopname"+inde).val();
+
+
+        if (shopname != "") {
+          var billno = $("#billno"+inde).val();
+          console.log("Shopname "+shopname +" index "+inde +" billno "+billno);
+        console.log(shopname);
+          $.post("/checkcorrect", {
+            Bill_Number: billno,
+            Shop_Name: shopname
+          }, function(data, status) {
+            var result = data.localeCompare("Exists");
+            if (result == 0) {
+              document.getElementById('billno'+inde).style.borderColor = "red";
+            } else {
+              document.getElementById('billno'+inde).style.borderColor = "green";
+            }
+
+          });
+        }
+      }
+
+
+
+      function shopchange()
+      {
+          console.log("inside shopchange");
+          var id = event.target.id;
+          var ind=id.split("shopname");
+          var inde=ind[1];
+          var sname = $("#"+id).val();
+          var bno = $("#billno"+inde).val();
+          console.log(id);
+          console.log(bno);
+          console.log(sname);
+        if (bno != "") {
+          $.post("/checkcorrect", {
+            Bill_Number: bno,
+            Shop_Name: sname
+          }, function(data, status) {
+            var result = data.localeCompare("Exists");
+            if (result == 0) {
+              document.getElementById('billno'+inde).style.borderColor = "red";
+            } else {
+              document.getElementById('billno'+inde).style.borderColor = "green";
+            }
+
+          });
+        }
+      }
+
+      function datechange()
+      {
+        var id = event.target.id;
+        var ind=id.split("billdate");
+        var inde=ind[1];
+        var q = new Date();
+        var c = new Date($("#"+id).val());
+        if (q.getTime() < c.getTime()) {
+          document.getElementById('billdate'+inde).style.borderColor = "red";
+        } else {
+          document.getElementById('billdate'+inde).style.borderColor = "green";
+        }
+      }
+   </script>
+</head>
+
+<body class="bodycolor">
+
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <!-- <img class="cart" src="Icon3.png" alt="">
+      <img class="rocket" src="Icon1.png" alt=""> -->
+    <h2 class="headerdesign">Add Bill</h2>
+    <div class="containers ">
+      <div>
+        <form id="billform" class="transperantform" action="/upload" method="post"   enctype="multipart/form-data">
+          <table id="myTable" class=" center table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+              <tr="row100 head">
+                <th class="center-align">Name of customer</th>
+                <th class="center-align">Customer Bill Number</th>
+                <th class="center-align">Bill Date</th>
+                <th class="center-align">Shop Name</th>
+                <th class="center-align">Bill Amount</th>
+                <th class="center-align">Attach An Image Of The Bill</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+              <tr id="tablerow">
+                <td><input class="form-control isize" type="text" name="customername[]" placeholder="Name" autofocus required></td>
+                <td> <input id="billno1" class="form-control isize identbill " type="text" name="customerbillno[]" placeholder="Customer Bill No"  onkeyup="billnoverify()" autofocus required> </td>
+                <td><input id="billdate1" class="form-control isize identdate" type="date" onchange='datechange()' name="billdate[]" placeholder="Bill Date" autofocus required></td>
+                <td> <select id="shopname1" class="form-control isize " onchange="shopchange()" name="shopname[]">
+                  <% shops.forEach(function(shopn){ %>
+                             <option value=<%=shopn.shopname %> > <%= shopn.shopname %> </option>
+                  <%  }) %>
+                  </select></td>
+                <td><input class="form-control isize" type="number" name="billamount[]" placeholder="Bill Amount" class="form-control" required></td>
+                <td> <input type="file" onchange="check()" id="fileUpload1" class="form-control isize inde" name="billpics" placeholder="Image Of The Bill" required></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="btn_center">
+            <button id="addnewrow" class="btn btn-primary btn-lg fontdesign" value="AddRow">Add</button>
+          </div>
+
+          <button id="applycoupon" class="btn btn-primary btn-block fontdesign" value="Upload">Apply For Coupon</button>
+        </form>
+
+      </div>
+
+
+    </div>
+    <!-- <img class="bag" src="Icon4.png" alt="">
+      <img class="ticket" src="Icon2.png" alt=""> -->
+  </div>
+
+
+  <script src="/common.js"></script>
+
+</body>
+
+</html>

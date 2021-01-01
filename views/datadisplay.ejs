@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Bill Details</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <script src="/common.js"></script>
+  <script>
+    $(document).ready(function() {
+
+      makingitclickable();
+
+      var myVar = setInterval(myTimer, 1000);
+
+      function myTimer() {
+        $.get("/getdata", function(data, status) {
+          var rowCount = $('#myTable tr').length - 1;
+          var stringrating="";
+          var datarows = data.length;
+          if (datarows > rowCount) {
+
+            var n = datarows - rowCount;
+
+            var i;
+            for (i = 0; i < n; i++) {
+              var rating =data[rowCount + i].bill_rating;
+              for(var j=0;j<rating;j++)
+              {
+                var st="<span class='glyphicon glyphicon-star star_color'></span>";
+              stringrating=stringrating.concat(st);
+              }
+                var cdate=new Date(data[rowCount + i].bill_creation_time );
+              var newRow = document.getElementById('myTable').insertRow();
+              newRow.innerHTML = "<td>" + data[rowCount + i].bill_id + "</td>" +
+                "<td>" + data[rowCount + i].customer_bill_no + "</td>" +
+                "<td>" + data[rowCount + i].customer_name + "</td>" +
+                "<td>" + data[rowCount + i].bill_date + "</td>" +
+                "<td>" + data[rowCount + i].shop_name + "</td>" +
+                "<td>" + data[rowCount + i].bill_amount + "</td>" +
+                "<td>" + data[rowCount + i].bill_image + "</td>" +
+                "<td>" + cdate + "</td>" +
+                "<td>" + stringrating + "</td>";
+            }
+              makingitclickable();
+          }
+        });
+      }
+    });
+
+
+
+    function makingitclickable()
+    {
+      var tabl = document.getElementById('myTable');
+      var cells = tabl.getElementsByTagName('td');
+      for (var i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        cell.onclick = function() {
+          var rowId = this.parentNode.rowIndex;
+          var rowSelected = tabl.getElementsByTagName('tr')[rowId];
+          var bid = rowSelected.cells[0].innerHTML;
+          var queryString = "?bill_id=" + bid;
+          window.open('/displaybilldetails' + queryString, "_blank");
+
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="transparentbackground">
+  <h1 class="h1billdetails">Customer Bills</h1>
+
+  <section class="paddingtop transparentbackground">
+
+    <div>
+      <table id="myTable" class=" center table table-striped table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr="row100 head">
+            <th class="center-align">Customer Bill Id</th>
+            <th class="center-align">Customer Bill Number</th>
+            <th class="center-align">Customer Name</th>
+            <th class="center-align">Bill Date</th>
+            <th class="center-align">Shop Name</th>
+            <th class="center-align">Bill Amount</th>
+            <th class="center-align">Bill Image</th>
+            <th class="center-align">Entry Time</th>
+            <th class="center-align">Bill Rating</th>
+            </tr>
+        </thead>
+        <tbody id="tablebody">
+          <% bill_details.forEach(function( eachbill ){ %>
+          <tr>
+            <td><%= eachbill.bill_id %> </td>
+            <td><%= eachbill.customer_bill_no %> </td>
+            <td><%= eachbill.customer_name %></td>
+            <td><%= eachbill.bill_date %> </td>
+            <td><%= eachbill.shop_name %></td>
+            <td><%= eachbill.bill_amount %> </td>
+            <td><%= eachbill.bill_image %> </td>
+            <td><%= eachbill.bill_creation_time %> </td>
+            <td>  <% for (i = 0; i <  eachbill.bill_rating; i++) { %>
+              <span class="glyphicon glyphicon-star star_color "></span>
+              <% } %> </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="bills.js" charset="utf-8"></script>
+
+  </section>
+
+  <h5 class="totaldesign">
+    Total No of Bills: <%= tot %>
+  </h5>
+
+</body>
+
+</html>

@@ -37,3 +37,5 @@ CREATE TABLE `shops` (
   `shopname` varchar(45) NOT NULL,
   PRIMARY KEY (`shopid`,`shopname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+https://user-images.githubusercontent.com/51241236/103434581-8d203380-4c29-11eb-960b-8d2da7d91239.png

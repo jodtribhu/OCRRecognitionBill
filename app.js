@@ -194,7 +194,7 @@ app.post("/inserttest", function(req, res) {
     var gba = false;
     let gdate = new Date(particularbilldate);
     let rating = 0;
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = 'C:/Users/Jodiss Tribhu/Desktop/cloudkey/shopping-ocr-299706-4d669a3c6d92.json'
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = 'Add your Api Key Json File Here'
     const vision = require('@google-cloud/vision');
     try {
       const client = new vision.ImageAnnotatorClient();
